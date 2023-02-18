@@ -13,8 +13,8 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="25dp"
-        android:text="INGRESE LOS DATOS SOLICITADOS"
         android:gravity="center"
+        android:text="INGRESE LOS DATOS SOLICITADOS"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,8 +26,8 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
-        android:ems="10"
         android:digits="aábcdeéfghiíjklmnñoópqrstuvwxyz AÁBCDEÉFGHIÍJKLMNÑOÓPQRSTUVWXYZ"
+        android:ems="10"
         android:hint="Ingrese nombre completo"
         android:inputType="textPersonName"
         android:minHeight="48dp"
@@ -78,28 +78,31 @@
 
     <Button
         android:id="@+id/btnGuardarContacto"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="491dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="5dp"
         android:text="Guardar Contacto"
+        app:layout_constraintBottom_toTopOf="@+id/btnContactosGuardados"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etNota" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="VisualLintButtonSize" />
 
     <Button
         android:id="@+id/btnContactosGuardados"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="241dp"
+        android:layout_marginStart="157dp"
+        android:layout_marginEnd="160dp"
+        android:layout_marginBottom="108dp"
         android:text="Contactos Guardados"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnGuardarContacto" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
