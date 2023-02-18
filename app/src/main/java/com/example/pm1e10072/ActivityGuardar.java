@@ -45,16 +45,34 @@ public class ActivityGuardar extends AppCompatActivity {
         SQLiteDatabase db = connection.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(Transacciones.pais, pais = listaPaises.getSelectedItem().toString());
-        values.put(Transacciones.nombre, nombre.getText().toString());
-        values.put(Transacciones.telefono, telefono.getText().toString());
-        values.put(Transacciones.nota,  nota.getText().toString());
 
-        Long result = db.insert(Transacciones.tablaContactos, Transacciones.id, values);
-        Toast.makeText(getApplicationContext(),"Contacto guardado correctamente"+ result.toString(), Toast.LENGTH_LONG).show();
-        db.close();
 
-        LimpiarCamposDeTexto();
+        nombre.setError(null);
+        telefono.setError(null);
+        nota.setError(null);
+
+        String verificarNombre = nombre.getText().toString();
+        String verificarTelefono = telefono.getText().toString();
+        String verificarNota = nota.getText().toString();
+
+        if (verificarNombre.trim().isEmpty()) {
+            nombre.setError("Porfavor, ingrese su nombre completo.");
+        } else if (verificarTelefono.trim().isEmpty()) {
+            telefono.setError("Porfavor, ingrese su numero de telefono.");
+        } else if (verificarNota.trim().isEmpty()) {
+            nota.setError("Porfavor, ingrese una nota.");
+        } else {
+            values.put(Transacciones.pais, pais = listaPaises.getSelectedItem().toString());
+            values.put(Transacciones.nombre, nombre.getText().toString());
+            values.put(Transacciones.telefono, telefono.getText().toString());
+            values.put(Transacciones.nota,  nota.getText().toString());
+            Long result = db.insert(Transacciones.tablaContactos, Transacciones.id, values);
+            Toast.makeText(getApplicationContext(),"Contacto guardado correctamente"+ result.toString(), Toast.LENGTH_LONG).show();
+            db.close();
+
+            LimpiarCamposDeTexto();
+        }
+
     }
 
     private void LimpiarCamposDeTexto() {
