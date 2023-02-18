@@ -55,12 +55,12 @@ public class ActivityGuardar extends AppCompatActivity {
         String verificarTelefono = telefono.getText().toString();
         String verificarNota = nota.getText().toString();
 
-        if (verificarNombre.trim().isEmpty()) {
-            nombre.setError("Porfavor, ingrese su nombre completo.");
-        } else if (verificarTelefono.trim().isEmpty()) {
-            telefono.setError("Porfavor, ingrese su numero de telefono.");
-        } else if (verificarNota.trim().isEmpty()) {
-            nota.setError("Porfavor, ingrese una nota.");
+        if(verificarNombre.trim().isEmpty() || verificarNombre.length() > 50)  {
+            nombre.setError("Ingrese su nombre completo porfavor (Maximo 50 caracteres)");
+        } else if(verificarTelefono.trim().isEmpty() || verificarTelefono.length() > 15){
+            telefono.setError("Ingrese su telefono porfavor (Maximo 15 caracteres)");
+        } else if(verificarNota.trim().isEmpty() || verificarNota.length() > 50){
+            nota.setError("Ingrese una nota porfavor (Maximo 50 caracteres)");
         } else {
             values.put(Transacciones.pais, pais = listaPaises.getSelectedItem().toString());
             values.put(Transacciones.nombre, nombre.getText().toString());

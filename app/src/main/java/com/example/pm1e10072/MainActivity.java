@@ -15,12 +15,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button btnAgregarContacto = findViewById(R.id.btnAgregarContacto);
-        btnAgregarContacto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentAgregarContacto = new Intent(getApplicationContext(), ActivityGuardar.class);
-                startActivity(intentAgregarContacto);
-            }
+        Button btnListaContactos = findViewById(R.id.btnListaContactos);
+        btnAgregarContacto.setOnClickListener(v -> {
+            Intent intentAgregarContacto = new Intent(getApplicationContext(), ActivityGuardar.class);
+            startActivity(intentAgregarContacto);
+        });
+
+        btnListaContactos.setOnClickListener(view -> {
+            Intent intentListaContactos = new Intent(getApplicationContext(), ActivityLista.class);
+            startActivity(intentListaContactos);
+
         });
     }
 }
