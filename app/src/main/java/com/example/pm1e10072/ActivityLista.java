@@ -1,10 +1,15 @@
 package com.example.pm1e10072;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -17,6 +22,8 @@ import com.example.pm1e10072.transacciones.Transacciones;
 
 import java.util.ArrayList;
 
+import static android.Manifest.permission.CALL_PHONE;
+
 public class ActivityLista extends AppCompatActivity {
 
     SQLiteConexion conexion;
@@ -25,6 +32,11 @@ public class ActivityLista extends AppCompatActivity {
     ArrayList<String> arrayListContactosToString;
     int posicionDeFilaEnLista;
     ArrayAdapter<String> arrayAdapter;
+    String telefonoElementoListaSeleccionado;
+    String codigoPais;
+    String codigoPaisExtraido;
+    String nombreFilaSeleccionado;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +53,91 @@ public class ActivityLista extends AppCompatActivity {
 
         listViewListaContactos.setOnItemClickListener((adapterView, view, i, l) -> {
             posicionDeFilaEnLista = arrayListContactos.get(i).getId();
+            telefonoElementoListaSeleccionado = arrayListContactos.get(i).getTelefono();
+            nombreFilaSeleccionado = arrayListContactos.get(i).getNombre();
+            codigoPais = arrayListContactos.get(i).getPais();
             String positionString = String.valueOf(posicionDeFilaEnLista);
-            Toast.makeText(getApplicationContext(), positionString, Toast.LENGTH_SHORT).show();
+            telefonoElementoListaSeleccionado = arrayListContactos.get(i).getTelefono();
+
+            if (codigoPais.contains("504")) {
+                codigoPaisExtraido = "+504";
+            } else if (codigoPais.contains("506")) {
+                codigoPaisExtraido = "+506";
+            } else if (codigoPais.contains("503")) {
+                codigoPaisExtraido = "+503";
+            } else if (codigoPais.contains("502")) {
+                codigoPaisExtraido = "+502";
+            }
+            Toast.makeText(getApplicationContext(), "Contacto: "+positionString+" seleccionado", Toast.LENGTH_SHORT).show();
             arrayAdapter.notifyDataSetChanged();
         });
 
         Button btnBorrar = findViewById(R.id.btnBorrar);
         btnBorrar.setOnClickListener(view -> {
-            borrarContacto();
-            arrayAdapter.notifyDataSetChanged();
-            listViewListaContactos.setAdapter(arrayAdapter);
+            if(posicionDeFilaEnLista > 0) {
+                AlertDialog.Builder alertDelete = new AlertDialog.Builder(ActivityLista.this);
+                alertDelete.setMessage("Esta seguro que desea eliminar a "+ nombreFilaSeleccionado)
+                        .setCancelable(false)
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                borrarContacto();
+                                finish();
+                                Intent intent = new Intent(getApplicationContext(), ActivityLista.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog titulo = alertDelete.create();
+                titulo.setTitle("ADVERTENCIA");
+                titulo.show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Seleccione un contacto para poder eliminar", Toast.LENGTH_SHORT).show();
+            }
         });
 
         Button btnAbrirPantallaActualizar = findViewById(R.id.btnActualizar);
         btnAbrirPantallaActualizar.setOnClickListener(view -> obtenerValoresParaEnviarActualizar());
+
+        Button btnLlamar = findViewById(R.id.btnLlamar);
+        btnLlamar.setOnClickListener(view -> {
+            AlertDialog.Builder alertCall = new AlertDialog.Builder(ActivityLista.this);
+            alertCall.setMessage("Desea llamar a "+nombreFilaSeleccionado)
+                    .setCancelable(false)
+                    .setPositiveButton("Si", (dialog, which) -> {
+                        Intent i = new Intent(Intent.ACTION_CALL);
+                        i.setData(Uri.parse("tel:"+ codigoPaisExtraido + telefonoElementoListaSeleccionado));
+
+                        if (ContextCompat.checkSelfPermission(getApplicationContext(), CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                            startActivity(i);
+                        } else {
+                            requestPermissions(new String[]{CALL_PHONE}, 1);
+                        }
+                    })
+                    .setNegativeButton("No", (dialog, which) -> dialog.cancel());
+            AlertDialog titulo = alertCall.create();
+            titulo.setTitle("ACCION");
+            titulo.show();
+        });
+
+        Button btnCompartir = findViewById(R.id.btnCompartir);
+        btnCompartir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentCompartir = new Intent(Intent.ACTION_SEND);
+                intentCompartir.setType("text/plain");
+                intentCompartir.putExtra(Intent.EXTRA_TEXT, "Contacto: " + nombreFilaSeleccionado + " Tel: " + codigoPaisExtraido + telefonoElementoListaSeleccionado);
+                startActivity(Intent.createChooser(intentCompartir, "Compartir con: "));
+            }
+        });
     }
+
+
 
     private void obtenerValoresParaEnviarActualizar() {
         SQLiteDatabase db = conexion.getWritableDatabase();
